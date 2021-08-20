@@ -1,6 +1,6 @@
 import './style/app.css';
-import { MsePlayer } from './player/MsePlayer';
-import { StreamClientScrcpy } from './googDevice/client/StreamClientScrcpy';
+// import { MsePlayer } from './player/MsePlayer';
+// import { StreamClientScrcpy } from './googDevice/client/StreamClientScrcpy';
 import Device from './device';
 // import { HostTracker } from './client/HostTracker';
 // import { StreamClientQVHack } from './applDevice/client/StreamClientQVHack';
@@ -14,8 +14,8 @@ window.onload = async function(): Promise<void> {
     const device = new Device('FA69R0312694', 'ws://127.0.0.1:8886');
     device.clientRun();
     const deviceElement = device.getDeviceElement();
-    document.body.append(deviceElement);
-    return;
+    console.log(deviceElement);
+    // document.body.append(deviceElement);
 
     /// #if USE_BROADWAY
     // const { BroadwayPlayer } = await import('./player/BroadwayPlayer');
@@ -23,18 +23,18 @@ window.onload = async function(): Promise<void> {
     /// #endif
 
     /// #if USE_H264_CONVERTER
-    const parsedQuery = {
-        action: 'stream',
-        udid: 'FA69R0312694',
-        player: 'mse',
-        // ws: 'ws://127.0.0.1:8886/?action=proxy-adb&remote=tcp:8886&udid=FA69R0312694',
-        ws: 'ws://127.0.0.1:8886',
-    };
-    StreamClientScrcpy.registerPlayer(MsePlayer);
-    const streamClientScrcpy = StreamClientScrcpy.clientInit(parsedQuery);
-    streamClientScrcpy.attachTouchListeners();
-    const deviceView = streamClientScrcpy.getDeviceView();
-    document.body.append(deviceView);
+    // const parsedQuery = {
+    //     action: 'stream',
+    //     udid: 'FA69R0312694',
+    //     player: 'mse',
+    //     ws: 'ws://127.0.0.1:8886/?action=proxy-adb&remote=tcp:8886&udid=FA69R0312694',
+    // ws: 'ws://127.0.0.1:8886',
+    // };
+    // StreamClientScrcpy.registerPlayer(MsePlayer);
+    // const streamClientScrcpy = StreamClientScrcpy.clientInit(parsedQuery);
+    // streamClientScrcpy.attachTouchListeners();
+    // const deviceView = streamClientScrcpy.getDeviceView();
+    // document.body.append(deviceView);
     /// #endif
 
     /// #if USE_TINY_H264
