@@ -1,7 +1,7 @@
 import { BaseClient } from '../../client/BaseClient';
 import { ParamsStreamScrcpy } from '../../types/ParamsStreamScrcpy';
 import { DroidMoreBox } from '../toolbox/DroidMoreBox';
-import { DroidToolBox } from '../toolbox/DroidToolBox';
+// import { DroidToolBox } from '../toolbox/DroidToolBox';
 import VideoSettings from '../../VideoSettings';
 import Size from '../../Size';
 import { ControlMessage } from '../../controlMessage/ControlMessage';
@@ -285,36 +285,34 @@ export class StreamClientScrcpy
             videoSettings = player.getVideoSettings();
         }
 
-        this.deviceView.className = 'device-view';
-        const stop = (ev?: string | Event) => {
-            if (ev && ev instanceof Event && ev.type === 'error') {
-                console.error(TAG, ev);
-            }
-            let parent;
-            parent = this.deviceView.parentElement;
-            if (parent) {
-                parent.removeChild(this.deviceView);
-            }
-            parent = moreBox.parentElement;
-            if (parent) {
-                parent.removeChild(moreBox);
-            }
-            this.streamReceiver.stop();
-            if (this.player) {
-                this.player.stop();
-            }
-        };
+        // const stop = (ev?: string | Event) => {
+        //     if (ev && ev instanceof Event && ev.type === 'error') {
+        //         console.error(TAG, ev);
+        //     }
+        //     let parent;
+        //     parent = this.deviceView.parentElement;
+        //     if (parent) {
+        //         parent.removeChild(this.deviceView);
+        //     }
+        //     parent = moreBox.parentElement;
+        //     if (parent) {
+        //         parent.removeChild(moreBox);
+        //     }
+        //     this.streamReceiver.stop();
+        //     if (this.player) {
+        //         this.player.stop();
+        //     }
+        // };
 
-        const droidMoreBox = (this.droidMoreBox = new DroidMoreBox(udid, player, this));
-        const moreBox = droidMoreBox.getHolderElement();
-        droidMoreBox.setOnStop(stop);
-        const droidToolBox = DroidToolBox.createToolBox(udid, player, this, moreBox);
-        this.controlButtons = droidToolBox.getHolderElement();
-        this.deviceView.appendChild(this.controlButtons);
+        // const droidMoreBox = (this.droidMoreBox = new DroidMoreBox(udid, player, this));
+        // const moreBox = droidMoreBox.getHolderElement();
+        // droidMoreBox.setOnStop(stop);
+        // const droidToolBox = DroidToolBox.createToolBox(udid, player, this, moreBox);
+        // this.controlButtons = droidToolBox.getHolderElement();
+        // this.deviceView.appendChild(this.controlButtons);
         const video = document.createElement('div');
-        video.className = 'video';
         this.deviceView.appendChild(video);
-        this.deviceView.appendChild(moreBox);
+        // this.deviceView.appendChild(moreBox);
         player.setParent(video);
         player.pause();
         if (fitToScreen) {
@@ -344,6 +342,21 @@ export class StreamClientScrcpy
 
     public getDeviceName(): string {
         return this.deviceName;
+    }
+
+    public shutdown(ev?: string | Event): void {
+        if (ev && ev instanceof Event && ev.type === 'error') {
+            console.error(TAG, ev);
+        }
+        let parent;
+        parent = this.deviceView.parentElement;
+        if (parent) {
+            parent.removeChild(this.deviceView);
+        }
+        this.streamReceiver.stop();
+        if (this.player) {
+            this.player.stop();
+        }
     }
 
     public setHandleKeyboardEvents(enabled: boolean): void {
@@ -433,21 +446,22 @@ export class StreamClientScrcpy
         const hasPid = descriptor.pid !== -1;
         if (hasPid) {
             const configureButtonId = `configure_${Util.escapeUdid(descriptor.udid)}`;
-            const e = html`<div class="stream ${blockClass}">
-                <button
-                    ${Attribute.UDID}="${descriptor.udid}"
-                    ${Attribute.COMMAND}="${ControlCenterCommand.CONFIGURE_STREAM}"
-                    ${Attribute.FULL_NAME}="${fullName}"
-                    ${Attribute.SECURE}="${params.secure}"
-                    ${Attribute.HOSTNAME}="${params.hostname}"
-                    ${Attribute.PORT}="${params.port}"
-                    ${Attribute.USE_PROXY}="${params.useProxy}"
-                    id="${configureButtonId}"
-                    class="active action-button"
-                >
-                    Configure stream
-                </button>
-            </div>`;
+            const e = html`
+                <div class='stream ${blockClass}'>
+                    <button
+                        ${Attribute.UDID}='${descriptor.udid}'
+                        ${Attribute.COMMAND}='${ControlCenterCommand.CONFIGURE_STREAM}'
+                        ${Attribute.FULL_NAME}='${fullName}'
+                        ${Attribute.SECURE}='${params.secure}'
+                        ${Attribute.HOSTNAME}='${params.hostname}'
+                        ${Attribute.PORT}='${params.port}'
+                        ${Attribute.USE_PROXY}='${params.useProxy}'
+                        id='${configureButtonId}'
+                        class='active action-button'
+                    >
+                        Configure stream
+                    </button>
+                </div>`;
             const a = e.content.getElementById(configureButtonId);
             a && (a.onclick = this.onConfigureStreamClick);
             return e.content;

@@ -17,6 +17,10 @@ export default class Device {
         this.streamClient = StreamClientScrcpy.clientInit(parsedQuery);
     }
 
+    public getStreamClient(): StreamClientScrcpy {
+        return this.streamClient;
+    }
+
     public setTouchListener(): void {
         this.streamClient.attachTouchListeners();
     }
@@ -32,6 +36,12 @@ export default class Device {
     public getDeviceElement(): HTMLDivElement {
         return this.streamClient.getDeviceView();
     }
+
+    public shutdown(ev?: string | Event): void {
+        this.streamClient.shutdown(ev);
+    }
+
+
 }
 
 

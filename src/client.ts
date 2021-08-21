@@ -1,7 +1,9 @@
-import './style/app.css';
+import './style/stream.css';
 // import { MsePlayer } from './player/MsePlayer';
 // import { StreamClientScrcpy } from './googDevice/client/StreamClientScrcpy';
 import Device from './device';
+// import VideoSettings from './VideoSettings';
+// import Size from './Size';
 // import { HostTracker } from './client/HostTracker';
 // import { StreamClientQVHack } from './applDevice/client/StreamClientQVHack';
 // import { Tool } from './googDevice/client/Tool';
@@ -11,11 +13,20 @@ window.onload = async function(): Promise<void> {
     // const parsedQuery = querystring.parse(hash);
     // const action = parsedQuery.action;
 
-    const device = new Device('FA69R0312694', 'ws://127.0.0.1:8886');
+    // const settings = new VideoSettings({
+    //     lockedVideoOrientation: -1,
+    //     bitrate: 8000000,
+    //     maxFps: 30,
+    //     iFrameInterval: 10,
+    //     bounds: new Size(720, 720),
+    //     sendFrameMeta: false,
+    // });
+
+    const device = new Device('FA69R0312694', 'ws://127.0.0.1:8886'); // , true, settings);
     device.clientRun();
     const deviceElement = device.getDeviceElement();
     console.log(deviceElement);
-    // document.body.append(deviceElement);
+    document.body.append(deviceElement);
 
     /// #if USE_BROADWAY
     // const { BroadwayPlayer } = await import('./player/BroadwayPlayer');
