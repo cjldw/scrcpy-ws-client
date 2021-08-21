@@ -2,6 +2,8 @@ import './style/stream.css';
 // import { MsePlayer } from './player/MsePlayer';
 // import { StreamClientScrcpy } from './googDevice/client/StreamClientScrcpy';
 import Device from './device';
+import VideoSettings from './VideoSettings';
+import Size from './Size';
 // import VideoSettings from './VideoSettings';
 // import Size from './Size';
 // import { HostTracker } from './client/HostTracker';
@@ -13,17 +15,16 @@ window.onload = async function(): Promise<void> {
     // const parsedQuery = querystring.parse(hash);
     // const action = parsedQuery.action;
 
-    // const settings = new VideoSettings({
-    //     lockedVideoOrientation: -1,
-    //     bitrate: 8000000,
-    //     maxFps: 30,
-    //     iFrameInterval: 10,
-    //     bounds: new Size(720, 720),
-    //     sendFrameMeta: false,
-    // });
-
     const device = new Device('FA69R0312694', 'ws://127.0.0.1:8886'); // , true, settings);
-    device.clientRun();
+    const settings = new VideoSettings({
+        lockedVideoOrientation: -1,
+        bitrate: 8000000,
+        maxFps: 30,
+        iFrameInterval: 10,
+        bounds: new Size(500, 500),
+        sendFrameMeta: false,
+    });
+    device.clientRun(true, settings);
     const deviceElement = device.getDeviceElement();
     console.log(deviceElement);
     document.body.append(deviceElement);
