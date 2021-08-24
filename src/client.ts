@@ -11,9 +11,6 @@ import Size from './Size';
 // import { Tool } from './googDevice/client/Tool';
 
 window.onload = async function(): Promise<void> {
-    // const hash = location.hash.replace(/^#!/, '');
-    // const parsedQuery = querystring.parse(hash);
-    // const action = parsedQuery.action;
 
     const device = new Device('FA69R0312694', 'ws://127.0.0.1:8886'); // , true, settings);
     const settings = new VideoSettings({
