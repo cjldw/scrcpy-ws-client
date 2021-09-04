@@ -141,7 +141,7 @@ export class StreamClientScrcpy
 
     public fetchSteam(fitToScreen?: boolean, videoSettings?: VideoSettings, player?: BasePlayer): void {
         const { udid, player: playerName } = this.params;
-        thiplayer = player;
+        this.player = player;
         this.startStream({ udid, player: this.player, playerName, fitToScreen, videoSettings });
     }
 
