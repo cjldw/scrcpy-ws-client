@@ -342,6 +342,7 @@ export class StreamClientScrcpy
         this.streamReceiver.sendEvent(e);
         if (this.streamClients.length > 0) {
             this.streamClients.forEach((client) => {
+                console.log('send to multiple client: ', client.clientId);
                 client.sendMessage(e);
             });
         }
