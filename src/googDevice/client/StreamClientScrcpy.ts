@@ -57,6 +57,8 @@ export class StreamClientScrcpy
     private fitToScreen?: boolean;
     private readonly streamReceiver: StreamReceiverScrcpy;
 
+    private streamClients: StreamClientScrcpy[] = [];
+
     private deviceView: HTMLDivElement = document.createElement('div');
 
     public static registerPlayer(playerClass: PlayerClass): void {
@@ -338,6 +340,11 @@ export class StreamClientScrcpy
 
     public sendMessage(e: ControlMessage): void {
         this.streamReceiver.sendEvent(e);
+        if (this.streamClients.length > 0) {
+            this.streamClients.forEach((client) => {
+                client.sendMessage(e);
+            });
+        }
     }
 
     public getDeviceName(): string {
@@ -423,6 +430,10 @@ export class StreamClientScrcpy
             return;
         }
         this.touchHandler = new FeaturedTouchHandler(this.player, ...player);
+    }
+
+    public attachMultipleClient(...client: StreamClientScrcpy[]) {
+        this.streamClients.push(...client);
     }
 
     private applyNewVideoSettings(videoSettings: VideoSettings, saveToStorage: boolean): void {
