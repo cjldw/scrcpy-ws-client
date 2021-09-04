@@ -2,6 +2,7 @@ import { KeyEventNames, TouchEventNames, TouchHandler } from './TouchHandler';
 import { BasePlayer } from '../player/BasePlayer';
 import { TouchControlMessage } from '../controlMessage/TouchControlMessage';
 import MotionEvent from '../MotionEvent';
+import { StreamClientScrcpy } from '../googDevice/client/StreamClientScrcpy';
 
 const TAG = '[FeaturedTouchHandler]';
 
@@ -25,6 +26,8 @@ export class FeaturedTouchHandler extends TouchHandler {
 
     private listener: TouchHandlerListener[];
 
+    private clients: StreamClientScrcpy[] = [];
+
     constructor(player: BasePlayer, ...listener: TouchHandlerListener[]) {
         super(player, FeaturedTouchHandler.touchEventsNames, FeaturedTouchHandler.keyEventsNames);
         this.listener = listener;
@@ -32,7 +35,23 @@ export class FeaturedTouchHandler extends TouchHandler {
         this.tag.addEventListener('mouseenter', this.onMouseEnter);
     }
 
+    public addClient(...clients: StreamClientScrcpy[]): void {
+        this.clients.push(...clients);
+    }
+
+    public dispatchTouchEvent(e: MouseEvent | TouchEvent): void {
+        this.onTouchEvent(e);
+    }
+
     protected onTouchEvent(e: MouseEvent | TouchEvent): void {
+        if (this.clients.length > 0) {
+            this.clients.forEach((client) => {
+                let touchListener = client.getTouchListener();
+                if (touchListener) {
+                    touchListener.dispatchTouchEvent(e);
+                }
+            });
+        }
         const screenInfo = this.player.getScreenInfo();
         if (!screenInfo) {
             return;
@@ -73,6 +92,14 @@ export class FeaturedTouchHandler extends TouchHandler {
     protected onKey(e: KeyboardEvent): void {
         if (!this.lastPosition) {
             return;
+        }
+        if (this.clients.length > 0) {
+            this.clients.forEach((client) => {
+                let touchListener = client.getTouchListener();
+                if (touchListener) {
+                    touchListener.dispatchTouchEvent(e);
+                }
+            });
         }
         const screenInfo = this.player.getScreenInfo();
         if (!screenInfo) {

@@ -27,6 +27,7 @@ import { ACTION } from '../../common/Action';
 import { ParsedUrlQuery } from 'querystring';
 import { StreamReceiverScrcpy } from './StreamReceiverScrcpy';
 import { ParamsDeviceTracker } from '../../types/ParamsDeviceTracker';
+import { TouchHandler } from '../../touchHandler/TouchHandler';
 
 type StartParams = {
     udid: string;
@@ -56,8 +57,6 @@ export class StreamClientScrcpy
     private filePushHandler?: FilePushHandler;
     private fitToScreen?: boolean;
     private readonly streamReceiver: StreamReceiverScrcpy;
-
-    private streamClients: StreamClientScrcpy[] = [];
 
     private deviceView: HTMLDivElement = document.createElement('div');
 
@@ -340,12 +339,6 @@ export class StreamClientScrcpy
 
     public sendMessage(e: ControlMessage): void {
         this.streamReceiver.sendEvent(e);
-        if (this.streamClients.length > 0) {
-            this.streamClients.forEach((client) => {
-                console.log('send to multiple client: ', client.clientId);
-                client.sendMessage(e);
-            });
-        }
     }
 
     public getDeviceName(): string {
@@ -413,6 +406,10 @@ export class StreamClientScrcpy
         this.touchHandler = new FeaturedTouchHandler(player, this);
     }
 
+    public getTouchListener(): FeaturedTouchHandler | undefined {
+        return this.touchHandler;
+    }
+
     public attachTouchListeners(): void {
         if (this.touchHandler) {
             return;
@@ -433,8 +430,12 @@ export class StreamClientScrcpy
         this.touchHandler = new FeaturedTouchHandler(this.player, ...player);
     }
 
-    public attachMultipleClient(...client: StreamClientScrcpy[]) {
-        this.streamClients.push(...client);
+    public attachMultipleClient(...client: StreamClientScrcpy[]): void {
+        let touchListener = this.getTouchListener();
+        if (touchListener == undefined) {
+            return;
+        }
+        touchListener.addClient(...client)
     }
 
     private applyNewVideoSettings(videoSettings: VideoSettings, saveToStorage: boolean): void {
