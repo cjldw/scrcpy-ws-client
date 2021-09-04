@@ -45,11 +45,11 @@ export class FeaturedTouchHandler extends TouchHandler {
     }
 
     protected onTouchEvent(e: MouseEvent | TouchEvent): void {
-        console.log("=============== share client: ", this.clients.length)
+        console.log('=============== share touch client: ', this.clients.length);
         if (this.clients.length > 0) {
             this.clients.forEach((client) => {
                 let touchListener = client.getTouchListener();
-                console.log("=========== listener: ", touchListener)
+                console.log('=========== touch listener: ', touchListener?.player);
                 if (touchListener) {
                     touchListener.dispatchTouchEvent(e);
                 }
@@ -87,6 +87,7 @@ export class FeaturedTouchHandler extends TouchHandler {
         e.stopPropagation();
         messages.forEach((message) => {
             for (const touchHandlerListener of this.listener) {
+                console.log('send touch message: ', message);
                 touchHandlerListener.sendMessage(message);
             }
         });
