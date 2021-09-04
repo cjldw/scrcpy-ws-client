@@ -31,6 +31,10 @@ export default class Device {
         this.streamClient.attachMultipleTouchListeners(...listener);
     }
 
+    public addClients(...clients: StreamClientScrcpy[]): void {
+        this.streamClient.attachMultipleClient(...clients);
+    }
+
     public clientRun(fitToScreen?: boolean, videoSettings?: VideoSettings) {
         this.streamClient.fetchSteam(fitToScreen, videoSettings);
     }
