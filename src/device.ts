@@ -39,10 +39,6 @@ export default class Device {
         this.streamClient.fetchSteam(fitToScreen, videoSettings, player);
     }
 
-    public addClients(...clients: StreamClientScrcpy[]): void {
-        this.streamClient.attachMultipleClient(...clients);
-    }
-
     public getDeviceElement(): HTMLDivElement {
         return this.streamClient.getDeviceView();
     }
