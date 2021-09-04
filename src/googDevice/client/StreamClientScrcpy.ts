@@ -57,6 +57,8 @@ export class StreamClientScrcpy
     private fitToScreen?: boolean;
     private readonly streamReceiver: StreamReceiverScrcpy;
 
+    private streamClients: StreamClientScrcpy[] = [];
+
     private deviceView: HTMLDivElement = document.createElement('div');
 
     public static registerPlayer(playerClass: PlayerClass): void {
@@ -67,10 +69,6 @@ export class StreamClientScrcpy
 
     public static getPlayers(): PlayerClass[] {
         return Array.from(this.players.values());
-    }
-
-    public getPlay(): BasePlayer | undefined {
-        return this.player;
     }
 
     private static getPlayerClass(playerName: string): PlayerClass | undefined {
@@ -139,9 +137,8 @@ export class StreamClientScrcpy
         }
     }
 
-    public fetchSteam(fitToScreen?: boolean, videoSettings?: VideoSettings, player?: BasePlayer): void {
+    public fetchSteam(fitToScreen?: boolean, videoSettings?: VideoSettings): void {
         const { udid, player: playerName } = this.params;
-        this.player = player;
         this.startStream({ udid, player: this.player, playerName, fitToScreen, videoSettings });
     }
 
@@ -343,6 +340,12 @@ export class StreamClientScrcpy
 
     public sendMessage(e: ControlMessage): void {
         this.streamReceiver.sendEvent(e);
+        if (this.streamClients.length > 0) {
+            this.streamClients.forEach((client) => {
+                console.log('send to multiple client event: ', e);
+                client.sendMessage(e);
+            });
+        }
     }
 
     public getDeviceName(): string {
@@ -410,10 +413,6 @@ export class StreamClientScrcpy
         this.touchHandler = new FeaturedTouchHandler(player, this);
     }
 
-    public getTouchListener(): FeaturedTouchHandler | undefined {
-        return this.touchHandler;
-    }
-
     public attachTouchListeners(): void {
         if (this.touchHandler) {
             return;
@@ -434,14 +433,8 @@ export class StreamClientScrcpy
         this.touchHandler = new FeaturedTouchHandler(this.player, ...player);
     }
 
-    public attachMultipleClient(...client: StreamClientScrcpy[]): void {
-        let touchListener = this.getTouchListener();
-        console.log('============== add multiple touch listener: ', touchListener);
-        if (touchListener == undefined) {
-            return;
-        }
-        console.log('add linstener successfully: ', client);
-        touchListener.addClient(...client);
+    public attachMultipleClient(...client: StreamClientScrcpy[]) {
+        this.streamClients.push(...client);
     }
 
     private applyNewVideoSettings(videoSettings: VideoSettings, saveToStorage: boolean): void {
