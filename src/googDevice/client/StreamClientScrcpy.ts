@@ -432,9 +432,11 @@ export class StreamClientScrcpy
 
     public attachMultipleClient(...client: StreamClientScrcpy[]): void {
         let touchListener = this.getTouchListener();
+        console.log("============== add multiple touch listener: ", touchListener)
         if (touchListener == undefined) {
             return;
         }
+        console.log("add linstener successfully: ", client)
         touchListener.addClient(...client)
     }
 

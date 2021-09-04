@@ -40,13 +40,16 @@ export class FeaturedTouchHandler extends TouchHandler {
     }
 
     public dispatchTouchEvent(e: MouseEvent | TouchEvent): void {
+        console.log('==================== dispatch evt: ', e);
         this.onTouchEvent(e);
     }
 
     protected onTouchEvent(e: MouseEvent | TouchEvent): void {
+        console.log("=============== share client: ", this.clients.length)
         if (this.clients.length > 0) {
             this.clients.forEach((client) => {
                 let touchListener = client.getTouchListener();
+                console.log("=========== listener: ", touchListener)
                 if (touchListener) {
                     touchListener.dispatchTouchEvent(e);
                 }
