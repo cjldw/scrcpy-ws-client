@@ -35,8 +35,8 @@ export default class Device {
         this.streamClient.attachMultipleClient(...clients);
     }
 
-    public clientRun(fitToScreen?: boolean, videoSettings?: VideoSettings) {
-        this.streamClient.fetchSteam(fitToScreen, videoSettings);
+    public clientRun(fitToScreen?: boolean, videoSettings?: VideoSettings, player?: BasePlayer) {
+        this.streamClient.fetchSteam(fitToScreen, videoSettings, player);
     }
 
     public getDeviceElement(): HTMLDivElement {
@@ -45,6 +45,10 @@ export default class Device {
 
     public shutdown(ev?: string | Event): void {
         this.streamClient.shutdown(ev);
+    }
+
+    public getPlayer(): BasePlayer | undefined {
+        return this.streamClient.getPlay();
     }
 
 

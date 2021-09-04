@@ -27,7 +27,6 @@ import { ACTION } from '../../common/Action';
 import { ParsedUrlQuery } from 'querystring';
 import { StreamReceiverScrcpy } from './StreamReceiverScrcpy';
 import { ParamsDeviceTracker } from '../../types/ParamsDeviceTracker';
-import { TouchHandler } from '../../touchHandler/TouchHandler';
 
 type StartParams = {
     udid: string;
@@ -68,6 +67,10 @@ export class StreamClientScrcpy
 
     public static getPlayers(): PlayerClass[] {
         return Array.from(this.players.values());
+    }
+
+    public getPlay(): BasePlayer | undefined {
+        return this.player;
     }
 
     private static getPlayerClass(playerName: string): PlayerClass | undefined {
@@ -136,8 +139,9 @@ export class StreamClientScrcpy
         }
     }
 
-    public fetchSteam(fitToScreen?: boolean, videoSettings?: VideoSettings): void {
+    public fetchSteam(fitToScreen?: boolean, videoSettings?: VideoSettings, player?: BasePlayer): void {
         const { udid, player: playerName } = this.params;
+        thiplayer = player;
         this.startStream({ udid, player: this.player, playerName, fitToScreen, videoSettings });
     }
 
@@ -432,12 +436,12 @@ export class StreamClientScrcpy
 
     public attachMultipleClient(...client: StreamClientScrcpy[]): void {
         let touchListener = this.getTouchListener();
-        console.log("============== add multiple touch listener: ", touchListener)
+        console.log('============== add multiple touch listener: ', touchListener);
         if (touchListener == undefined) {
             return;
         }
-        console.log("add linstener successfully: ", client)
-        touchListener.addClient(...client)
+        console.log('add linstener successfully: ', client);
+        touchListener.addClient(...client);
     }
 
     private applyNewVideoSettings(videoSettings: VideoSettings, saveToStorage: boolean): void {
