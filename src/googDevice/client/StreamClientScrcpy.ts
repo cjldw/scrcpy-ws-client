@@ -104,7 +104,7 @@ export class StreamClientScrcpy
         fitToScreen?: boolean,
         videoSettings?: VideoSettings,
     ): StreamClientScrcpy {
-        console.log('stream fit screen ', fitToScreen, ' with settings: ', videoSettings);
+        //console.log('stream fit screen ', fitToScreen, ' with settings: ', videoSettings);
         return new StreamClientScrcpy(params, streamReceiver, player);
     }
 
@@ -342,7 +342,7 @@ export class StreamClientScrcpy
         this.streamReceiver.sendEvent(e);
         if (this.streamClients.length > 0) {
             this.streamClients.forEach((client) => {
-                console.log('send to multiple client event: ', e);
+                //console.log('send to multiple client event: ', e);
                 client.sendMessage(e);
             });
         }
